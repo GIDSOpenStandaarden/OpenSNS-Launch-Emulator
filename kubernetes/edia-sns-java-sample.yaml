@@ -27,11 +27,11 @@ spec:
             initialDelaySeconds: 60
             periodSeconds: 10
             failureThreshold: 20
-          resources:
-            limits:
-              memory: 200Mi
-            requests:
-              memory: 100Mi
+#          resources:
+#            limits:
+#              memory: 200Mi
+#            requests:
+#              memory: 100Mi
 ---
 apiVersion: v1
 kind: Service
