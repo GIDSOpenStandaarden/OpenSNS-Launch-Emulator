@@ -50,6 +50,6 @@ deploy-en-tst:
     - perl -p -i -e "s/<TAG>/$CI_PIPELINE_ID/g;" kubernetes/$TAG_NAME.yaml
     - ssh edia@${CLUSTER_MASTER} mkdir -p ${FULL_NAMESPACE}
     - scp kubernetes/$TAG_NAME.yaml kubernetes/${TAG_NAME}-tst.yaml edia@${CLUSTER_MASTER}:/home/edia/${FULL_NAMESPACE}
-#    - ssh edia@${CLUSTER_MASTER} "kubectl -n ${FULL_NAMESPACE} apply -f ${FULL_NAMESPACE}/${TAG_NAME}.yaml -f kubernetes/${TAG_NAME}-tst.yaml"
+    - ssh edia@${CLUSTER_MASTER} "kubectl -n ${FULL_NAMESPACE} apply -f ${FULL_NAMESPACE}/${TAG_NAME}.yaml -f ${FULL_NAMESPACE}/${TAG_NAME}-tst.yaml"
   only:
     - master
