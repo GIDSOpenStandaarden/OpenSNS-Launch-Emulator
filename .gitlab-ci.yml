@@ -41,7 +41,7 @@ package:
 
 deploy-en-tst:
   variables:
-    FULL_NAMESPACE: ${NAMESPACE_BASE}-txt
+    FULL_NAMESPACE: ${NAMESPACE_BASE}-tst
   stage: deploy
   when: on_success
   tags:
