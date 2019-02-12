@@ -1,0 +1,55 @@
+variables:
+  REGISTRY_NAME: docker-registry.edia.nl
+  TAG_NAME: edia-sns-java-sample
+  IMAGE_TAG: $REGISTRY_NAME/$TAG_NAME:$CI_PIPELINE_ID
+  IMAGE_TAG_LATEST: $REGISTRY_NAME/$TAG_NAME:latest
+  NAMESPACE_BASE: edia-smb-sso-poc
+  CLUSTER_MASTER: kube-1-nonprd.lw.edia.nl
+
+stages:
+  - build
+  - package
+  - deploy
+
+build:
+  stage: build
+  image: maven:3.5.3-jdk-8-slim
+  script:
+    - mvn clean install
+  artifacts:
+    when: always
+    paths:
+      - target/edia-sns-java-sample.jar
+  tags:
+    - docker
+  only:
+    - master
+
+package:
+  stage: package
+  script:
+    - docker build -t $IMAGE_TAG -t $IMAGE_TAG_LATEST .
+    - docker push $IMAGE_TAG && docker push $IMAGE_TAG_LATEST
+  dependencies:
+    - build
+  when: on_success
+  tags:
+    - shell
+  only:
+    - master
+
+
+deploy-en-tst:
+  variables:
+    FULL_NAMESPACE: ${NAMESPACE_BASE}-txt
+  stage: deploy
+  when: on_success
+  tags:
+    - shell
+  script:
+    - perl -p -i -e "s/<TAG>/$CI_PIPELINE_ID/g;" kubernetes/$TAG_NAME.yaml
+    - ssh edia@${CLUSTER_MASTER} mkdir -p ${FULL_NAMESPACE}
+    - scp kubernetes/$TAG_NAME.yaml kubernetes/${TAG_NAME}-tst.yaml edia@${CLUSTER_MASTER}:/home/edia/${FULL_NAMESPACE}
+    - ssh edia@${CLUSTER_MASTER} "kubectl -n ${FULL_NAMESPACE} apply -f ${FULL_NAMESPACE}/${TAG_NAME}.yaml -f kubernetes/${TAG_NAME}-tst.yaml"
+  only:
+    - master

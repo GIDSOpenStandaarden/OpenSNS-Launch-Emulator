@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+    <title>SNS Launch Pad - Test application</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mini.css/3.0.1/mini-default.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        div.label {
+            width: 230px;
+            display: inline;
+        }
+    </style>
+</head>
+<body>
+<h1>SNS Launch Pad</h1>
+<form action="launch.html" method="post">
+    <fieldset>
+        <legend>Message details</legend>
+        <div class="input-group vertical">
+            <label for="subject">Subject</label>
+            <input type="text" id="subject" name="subject" value="treatment_id_124"/>
+        </div>
+        <div class="input-group vertical">
+            <label for="issuer">Issuer</label>
+            <input type="text" id="issuer" name="issuer" value="wikiwijk.nl"/>
+        </div>
+        <div class="input-group vertical">
+            <label for="audience">Audience</label>
+            <input type="text" id="audience" name="audience" value="therapieland.nl"/>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>User details</legend>
+        <div class="input-group vertical">
+            <label for="email">E-mail</label>
+            <input type="text" id="email" name="email" value="klaas@devries.nl"/>
+        </div>
+        <div class="input-group vertical">
+            <label for="firstName">First name</label>
+            <input type="text" id="firstName" name="firstName" value="Klaas"/>
+        </div>
+        <div class="input-group vertical">
+            <label for="middleName">Middle name</label>
+            <input type="text" id="middleName" name="middleName" value="de"/>
+        </div>
+        <div class="input-group vertical">
+            <label for="lastName">Last name</label>
+            <input type="text" id="lastName" name="lastName" value="Vries"/>
+        </div>
+    </fieldset>
+    <input type="submit" value="Launch"/>
+</form>
+</body>
+</html>
