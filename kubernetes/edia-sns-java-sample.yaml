@@ -19,19 +19,19 @@ spec:
       imagePullSecrets:
       - name: edia-registry-credential
       containers:
-        name: edia-sns-java-sample
-        image: 'docker-registry.edia.nl/edia-sns-java-sample:<TAG>'
-        readinessProbe:
-          tcpSocket:
-            port: 8080
-          initialDelaySeconds: 60
-          periodSeconds: 10
-          failureThreshold: 20
-        resources:
-          limits:
-            memory: 200Mi
-          requests:
-            memory: 100Mi
+        - name: edia-sns-java-sample
+          image: 'docker-registry.edia.nl/edia-sns-java-sample:<TAG>'
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            failureThreshold: 20
+          resources:
+            limits:
+              memory: 200Mi
+            requests:
+              memory: 100Mi
 ---
 apiVersion: v1
 kind: Service
