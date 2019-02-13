@@ -22,11 +22,20 @@ spec:
         - name: edia-sns-java-sample
           image: 'docker-registry.edia.nl/edia-sns-java-sample:<TAG>'
           readinessProbe:
-            tcpSocket:
+            httpGet:
+              path: /health
               port: 8080
-            initialDelaySeconds: 60
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
             periodSeconds: 10
-            failureThreshold: 20
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 30
+            timeoutSeconds: 5
+            periodSeconds: 10
+            failureThreshold: 10
           resources:
             limits:
               memory: 500Mi
