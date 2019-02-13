@@ -23,13 +23,11 @@ public class LaunchController {
 	@Autowired
 	JwtService jwtService;
 
-	@Value("${sns.producer.url}")
-	String launchUrl;
 
 	@RequestMapping(value = "launch.html", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
 	public ResponseEntity<String> launch(FormValueObject vo) throws IOException {
 		String template = IOUtils.toString(getClass().getResourceAsStream("/post_template.html"));
-		String body = template.replace("JWT_TICKET", jwtService.generateJwt(vo)).replace("ACTION", launchUrl);
+		String body = template.replace("JWT_TICKET", jwtService.generateJwt(vo)).replace("ACTION", vo.getLaunchUrl());
 		return ResponseEntity.ok(body);
 	}
 
@@ -41,6 +39,16 @@ public class LaunchController {
 		String firstName;
 		String middleName;
 		String lastName;
+
+		public String getLaunchUrl() {
+			return launchUrl;
+		}
+
+		public void setLaunchUrl(String launchUrl) {
+			this.launchUrl = launchUrl;
+		}
+
+		String launchUrl;
 
 		public String getAudience() {
 			return audience;
