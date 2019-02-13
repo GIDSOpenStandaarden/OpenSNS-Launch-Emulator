@@ -3,7 +3,6 @@ package nl.edia.sns.consumer.example.controller;
 import nl.edia.sns.consumer.example.service.JwtService;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,9 +25,21 @@ public class LaunchController {
 
 	@RequestMapping(value = "launch.html", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
 	public ResponseEntity<String> launch(FormValueObject vo) throws IOException {
-		String template = IOUtils.toString(getClass().getResourceAsStream("/post_template.html"));
-		String body = template.replace("JWT_TICKET", jwtService.generateJwt(vo)).replace("ACTION", vo.getLaunchUrl());
+		String templateName = getTemplateName(vo);
+		String template = IOUtils.toString(getClass().getResourceAsStream(templateName));
+		String jwt = jwtService.generateJwt(vo);
+		String body = template.replace("JWT_TICKET", jwt).replace("ACTION", vo.getLaunchUrl());
 		return ResponseEntity.ok(body);
+	}
+
+	private String getTemplateName(FormValueObject vo) {
+		String templateName;
+		if (vo.getDebug()) {
+			templateName = "/post_template_debug.html";
+		} else {
+			templateName = "/post_template.html";
+		}
+		return templateName;
 	}
 
 	public static class FormValueObject {
@@ -39,15 +50,7 @@ public class LaunchController {
 		String firstName;
 		String middleName;
 		String lastName;
-
-		public String getLaunchUrl() {
-			return launchUrl;
-		}
-
-		public void setLaunchUrl(String launchUrl) {
-			this.launchUrl = launchUrl;
-		}
-
+		boolean debug = Boolean.FALSE;
 		String launchUrl;
 
 		public String getAudience() {
@@ -56,6 +59,14 @@ public class LaunchController {
 
 		public void setAudience(String audience) {
 			this.audience = audience;
+		}
+
+		public boolean getDebug() {
+			return debug;
+		}
+
+		public void setDebug(boolean debug) {
+			this.debug = debug;
 		}
 
 		public String getEmail() {
@@ -88,6 +99,14 @@ public class LaunchController {
 
 		public void setLastName(String lastName) {
 			this.lastName = lastName;
+		}
+
+		public String getLaunchUrl() {
+			return launchUrl;
+		}
+
+		public void setLaunchUrl(String launchUrl) {
+			this.launchUrl = launchUrl;
 		}
 
 		public String getMiddleName() {

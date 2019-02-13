@@ -4,58 +4,140 @@
     <title>SNS Launch Pad - Test application</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mini.css/3.0.1/mini-default.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        div.label {
-            width: 230px;
-            display: inline;
-        }
-    </style>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <script>
+      function saveCookie() {
+        $('form').each(function (i) {
+          var x = $(this).attr('name');
+          var str = $(this).serialize();
+          $.cookie(x, str, {expires: 2});
+        });
+      }
+
+      function restoreCookie() {
+        $('form').each(function (i) {
+          var x = $(this).attr('name');
+          var str = $.cookie(x) || '';
+          var data = str.split('&');
+          $(data).each(function (element) {
+            var a = this.split('=');
+            var value = decodeURIComponent(a[1]);
+            $('input[name="' + a[0] + '"][text]').val(value);
+            $('input[name="' + a[0] + '"][type=checkbox]').prop('checked', true);
+          })
+        });
+      }
+
+      function resetForm(formName) {
+        $(formName).reset();
+        $.removeCookie(formName);
+      }
+
+
+      $(document).ready(function () {
+        restoreCookie();
+        $('#opentype').change(function () {
+          var checked = $(this).is(":checked");
+          if (checked) {
+            $('#launchform').attr('target', '_blank')
+          } else {
+            $('#launchform').attr('target', '_self')
+          }
+
+        });
+        $('#launchform').submit(function () {
+          saveCookie();
+        });
+        $('#launchform').change(function () {
+          saveCookie();
+          console.log('Change')
+        })
+      })
+    </script>
 </head>
 <body>
+<div class="container">
 <h1>SNS Launch Pad</h1>
-<form action="launch.html" method="post">
-    <fieldset>
-        <legend>Request details</legend>
-        <div class="input-group vertical">
-            <label for="launchUrl">Launch URL</label>
-            <input type="text" id="launchUrl" name="launchUrl" value="https://develop.therapieland.nl/external/wikiwijk/sns/access/"/>
+    <form id="launchform" action="launch.html" method="post" target="_self" name="launchform">
+        <div class="row">
         </div>
-    </fieldset>
-    <fieldset>
-        <legend>Message details</legend>
-        <div class="input-group vertical">
-            <label for="subject">Subject</label>
-            <input type="text" id="subject" name="subject" value="treatment_id_124"/>
+        <div class="row">
+
+            <div class="col-sm-6">
+                <fieldset>
+                    <legend>User details</legend>
+                    <div class="input-group vertical">
+                        <label for="email">E-mail</label>
+                        <input type="text" id="email" name="email" value="klaas@devries.nl"/>
+                    </div>
+                    <div class="input-group vertical">
+                        <label for="firstName">First name</label>
+                        <input type="text" id="firstName" name="firstName" value="Klaas"/>
+                    </div>
+                    <div class="input-group vertical">
+                        <label for="middleName">Middle name</label>
+                        <input type="text" id="middleName" name="middleName" value="de"/>
+                    </div>
+                    <div class="input-group vertical">
+                        <label for="lastName">Last name</label>
+                        <input type="text" id="lastName" name="lastName" value="Vries"/>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-sm-6">
+                <fieldset>
+                    <legend>Message details</legend>
+                    <div class="input-group vertical">
+                        <label for="subject">Subject</label>
+                        <input type="text" id="subject" name="subject" value="treatment_id_124"/>
+                    </div>
+                    <div class="input-group vertical">
+                        <label for="issuer">Issuer</label>
+                        <input type="text" id="issuer" name="issuer" value="wikiwijk.nl"/>
+                    </div>
+                    <div class="input-group vertical">
+                        <label for="audience">Audience</label>
+                        <input type="text" id="audience" name="audience" value="therapieland.nl"/>
+                    </div>
+                </fieldset>
+            </div>
         </div>
-        <div class="input-group vertical">
-            <label for="issuer">Issuer</label>
-            <input type="text" id="issuer" name="issuer" value="wikiwijk.nl"/>
+        <div class="row">
+            <div class="col-sm-6">
+                <fieldset>
+                    <legend>Request details</legend>
+                    <div class="input-group vertical">
+                        <label for="launchUrl">Launch URL</label>
+                        <input type="text" id="launchUrl" name="launchUrl"
+                               value="https://develop.therapieland.nl/external/wikiwijk/sns/access/"/>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-sm-6">
+                <fieldset>
+                    <legend>Controls</legend>
+                    <div class="input-group vertical">
+                        <label for="opentype">Open in new window</label>
+                        <input type="checkbox" id="opentype" name="opentype"/>
+                    </div>
+                    <div class="input-group vertical">
+                        <label for="debug">Debug</label>
+                        <input type="checkbox" id="debug" name="debug"/>
+                    </div>
+                </fieldset>
+            </div>
         </div>
-        <div class="input-group vertical">
-            <label for="audience">Audience</label>
-            <input type="text" id="audience" name="audience" value="therapieland.nl"/>
+        <div class="row">
+            <div class="col-sm-12">
+                <input type="reset" name="submit" value="Reset form to defaults"/>
+                <input type="submit" name="submit" value="Launch"/>
+
+            </div>
         </div>
-    </fieldset>
-    <fieldset>
-        <legend>User details</legend>
-        <div class="input-group vertical">
-            <label for="email">E-mail</label>
-            <input type="text" id="email" name="email" value="klaas@devries.nl"/>
-        </div>
-        <div class="input-group vertical">
-            <label for="firstName">First name</label>
-            <input type="text" id="firstName" name="firstName" value="Klaas"/>
-        </div>
-        <div class="input-group vertical">
-            <label for="middleName">Middle name</label>
-            <input type="text" id="middleName" name="middleName" value="de"/>
-        </div>
-        <div class="input-group vertical">
-            <label for="lastName">Last name</label>
-            <input type="text" id="lastName" name="lastName" value="Vries"/>
-        </div>
-    </fieldset>
-    <input type="submit" value="Launch"/>
-</form>
+    </form>
+</div>
 </body>
 </html>
