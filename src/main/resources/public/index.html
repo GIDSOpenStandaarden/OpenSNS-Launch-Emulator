@@ -70,19 +70,23 @@
                 <fieldset>
                     <legend>User details</legend>
                     <div class="input-group vertical">
-                        <label for="email">E-mail</label>
+                        <label for="subject">User identificatie (sub)</label>
+                        <input type="text" id="subject" name="subject" value="urn:sns:user:nl.wikiwijk:123456"/>
+                    </div>
+                    <div class="input-group vertical">
+                        <label for="email">E-mail (email)</label>
                         <input type="text" id="email" name="email" value="klaas@devries.nl"/>
                     </div>
                     <div class="input-group vertical">
-                        <label for="firstName">First name</label>
+                        <label for="firstName">First name (first_name)</label>
                         <input type="text" id="firstName" name="firstName" value="Klaas"/>
                     </div>
                     <div class="input-group vertical">
-                        <label for="middleName">Middle name</label>
+                        <label for="middleName">Middle name (middle_name)</label>
                         <input type="text" id="middleName" name="middleName" value="de"/>
                     </div>
                     <div class="input-group vertical">
-                        <label for="lastName">Last name</label>
+                        <label for="lastName">Last name (last_name)</label>
                         <input type="text" id="lastName" name="lastName" value="Vries"/>
                     </div>
                 </fieldset>
@@ -91,15 +95,15 @@
                 <fieldset>
                     <legend>Message details</legend>
                     <div class="input-group vertical">
-                        <label for="subject">Subject</label>
-                        <input type="text" id="subject" name="subject" value="treatment_id_124"/>
+                        <label for="resource_id">Behandeling (resource_id)</label>
+                        <input type="text" id="resource_id" name="resource_id" value="dagstructuur"/>
                     </div>
                     <div class="input-group vertical">
-                        <label for="issuer">Issuer</label>
+                        <label for="issuer">Issuer (iss)</label>
                         <input type="text" id="issuer" name="issuer" value="wikiwijk.nl"/>
                     </div>
                     <div class="input-group vertical">
-                        <label for="audience">Audience</label>
+                        <label for="audience">Audience (aud)</label>
                         <input type="text" id="audience" name="audience" value="therapieland.nl"/>
                     </div>
                 </fieldset>
@@ -132,7 +136,7 @@
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <input type="reset" name="submit" value="Reset form to defaults"/>
+                <input type="reset" name="submit" value="Reset to defaults"/>
                 <input type="submit" name="submit" value="Launch"/>
 
             </div>

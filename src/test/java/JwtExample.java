@@ -12,7 +12,8 @@ import java.util.UUID;
 
 public class JwtExample {
 	public static void main(String[] args) throws Exception {
-		String subject = "treatment_id_124";
+		String resourceId = "dagstructuur";
+		String subject = "urn:sns:user:wikiwijk.nl:123456";
 		String issuer = "wikiwijk.nl";
 		String audience = "therapieland.nl";
 		String email = "klaas@devries.nl";
@@ -34,6 +35,7 @@ public class JwtExample {
 				.withSubject(subject)
 				.withIssuer(issuer)
 				.withAudience(audience)
+				.withClaim("resource_id", resourceId)
 				.withClaim("email", email)
 				.withClaim("first_name", firstName)
 				.withClaim("middle_name", middleName)

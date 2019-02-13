@@ -2,7 +2,7 @@ package nl.edia.sns.consumer.example.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import nl.edia.sns.consumer.example.controller.LaunchController;
+import nl.edia.sns.consumer.example.controller.JwtLaunchValueObject;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -39,7 +39,8 @@ public class JwtService {
 				new PKCS8EncodedKeySpec(Base64.decodeBase64(privateK)));
 	}
 
-	public String generateJwt(LaunchController.FormValueObject vo) {
+	public String generateJwt(JwtLaunchValueObject vo) {
+		String resourceId = vo.getResource_id();
 		String subject = vo.getSubject();
 		String issuer = vo.getIssuer();
 		String audience = vo.getAudience();
@@ -54,6 +55,7 @@ public class JwtService {
 				.withIssuer(issuer)
 				.withAudience(audience)
 				.withClaim("email", email)
+				.withClaim("resource_id", resourceId)
 				.withClaim("first_name", firstName)
 				.withClaim("middle_name", middleName)
 				.withClaim("last_name", lastName)
