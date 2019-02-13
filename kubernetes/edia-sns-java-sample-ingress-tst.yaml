@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: edia-sns-java-sample
+  annotations:
+    kubernetes.io/ingress.class: nginx-internal
+spec:
+  rules:
+  - host: sns-consumer.edia-tst.eu
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: edia-sns-java-sample
+          servicePort: 8080
