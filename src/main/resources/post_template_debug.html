@@ -7,11 +7,13 @@
 <form method="post" action="ACTION">
     <fieldset>
         <legend>Request details</legend>
-        <label for="request">JTW Ticket</label>
-        <input type="text" id="request" name="request" value="JWT_TICKET"/>
-        <!--<textarea id="request" name="request"></textarea>-->
+        <label for="request">JTW Token</label>
+        <input type="text" id="request" name="request" value="JWT_TOKEN" maxlength="2048"/>
+        <p>Open the token at  <a href="https://jwt.io/?token=JWT_TOKEN">jtt.io</a></p>
     </fieldset>
     <input type="submit">
+
+
 </form>
 </body>
 </html>

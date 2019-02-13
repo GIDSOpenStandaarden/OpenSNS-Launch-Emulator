@@ -28,7 +28,7 @@ public class LaunchController {
 		String templateName = getTemplateName(vo);
 		String template = IOUtils.toString(getClass().getResourceAsStream(templateName));
 		String jwt = jwtService.generateJwt(vo);
-		String body = template.replace("JWT_TICKET", jwt).replace("ACTION", vo.getLaunchUrl());
+		String body = template.replace("JWT_TOKEN", jwt).replace("ACTION", vo.getLaunchUrl());
 		return ResponseEntity.ok(body);
 	}
 
