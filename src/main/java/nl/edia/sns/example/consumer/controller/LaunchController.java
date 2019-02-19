@@ -1,6 +1,6 @@
-package nl.edia.sns.consumer.example.controller;
+package nl.edia.sns.example.consumer.controller;
 
-import nl.edia.sns.consumer.example.service.JwtService;
+import nl.edia.sns.example.consumer.service.JwtService;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;

@@ -1,3 +1,4 @@
+---
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -13,3 +14,19 @@ spec:
         backend:
           serviceName: edia-sns-java-sample
           servicePort: 8080
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: edia-sns-java-sample
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  rules:
+    - host: sns-producer.edia-tst.eu
+      http:
+        paths:
+          - path: /producer/
+            backend:
+              serviceName: edia-sns-java-sample
+              servicePort: 8080

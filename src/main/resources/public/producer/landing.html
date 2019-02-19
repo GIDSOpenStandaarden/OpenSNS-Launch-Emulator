@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+<head>
+    <title>SNS Launch Pad - Test application</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mini.css/3.0.1/mini-default.min.css" rel="stylesheet">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <script crossorigin="anonymous"
+            integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+            src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script>
+      var pretty = function (json) {
+        return JSON.stringify(JSON.parse(json), null, 2);
+      };
+      $(document).ready(function () {
+        $('#validateform').submit(function () {
+          return false;
+        });
+
+        var searchParams = new URLSearchParams(window.location.search);
+        var request = searchParams.get('request');
+        $('#validateform textarea[name="request"]').text(request);
+        var fragments = request.split('.');
+        $('#validateform textarea[name="header"]').text(pretty(atob(fragments[0])));
+        $('#validateform textarea[name="body"]').text(pretty(atob(fragments[1])));
+        $('#validateform textarea[name="signature"]').text(atob(fragments[2]));
+      })
+    </script>
+</head>
+<body>
+<div class="container">
+    <h1>SNS producer launch validator</h1>
+    <form action="launch.html" id="validateform" method="post" name="launchform" target="_self">
+        <div class="row">
+            <div class="col-sm-6">
+                <fieldset>
+                    <legend>Request</legend>
+                    <!--<label for="request">Request</label>-->
+                    <!--<input id="request" type="text"/>-->
+                    <textarea cols="80" id="request" name="request" rows="25"></textarea>
+                </fieldset>
+            </div>
+            <div class="col-sm-6">
+                <fieldset>
+                    <legend>Header</legend>
+                    <textarea cols="80" id="header" name="header" rows="5"></textarea>
+                </fieldset>
+                <fieldset>
+                    <legend>Body</legend>
+                    <textarea cols="80" id="body" name="body" rows="15"></textarea>
+                </fieldset>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

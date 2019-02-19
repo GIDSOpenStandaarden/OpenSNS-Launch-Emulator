@@ -1,4 +1,4 @@
-package nl.edia.sns.consumer.example.controller;
+package nl.edia.sns.example.consumer.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

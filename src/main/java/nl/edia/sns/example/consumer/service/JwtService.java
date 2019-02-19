@@ -1,8 +1,8 @@
-package nl.edia.sns.consumer.example.service;
+package nl.edia.sns.example.consumer.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import nl.edia.sns.consumer.example.controller.JwtLaunchValueObject;
+import nl.edia.sns.example.consumer.controller.JwtLaunchValueObject;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
