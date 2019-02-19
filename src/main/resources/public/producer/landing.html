@@ -4,15 +4,33 @@
     <title>SNS Launch Pad - Test application</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/mini.css/3.0.1/mini-default.min.css" rel="stylesheet">
     <meta content="width=device-width, initial-scale=1" name="viewport">
-    <script crossorigin="anonymous"
-            integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
-            src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
     <script>
       var pretty = function (json) {
         return JSON.stringify(JSON.parse(json), null, 2);
       };
       $(document).ready(function () {
         $('#validateform').submit(function () {
+          var token = $('#validateform textarea*[name="request"]').val();
+          var publicKey = $('#validateform textarea[name="publicKey"]').val();
+          var data = {token: token, publicKey: publicKey}
+          $.ajax({
+            dataType: "json",
+            url: 'validate',
+            data: data,
+            success: function (data) {
+              var error = data.error;
+              if (error) {
+                $('.validation').hide();
+                $('.validation.error').show();
+              } else {
+                $('.validation').hide();
+                $('.validation.correct').show();
+              }
+            }
+          });
           return false;
         });
 
@@ -22,32 +40,57 @@
         var fragments = request.split('.');
         $('#validateform textarea[name="header"]').text(pretty(atob(fragments[0])));
         $('#validateform textarea[name="body"]').text(pretty(atob(fragments[1])));
-        $('#validateform textarea[name="signature"]').text(atob(fragments[2]));
+        $('#validateform textarea[name="signature"]').text(fragments[2]);
       })
     </script>
 </head>
 <body>
 <div class="container">
     <h1>SNS producer launch validator</h1>
-    <form action="launch.html" id="validateform" method="post" name="launchform" target="_self">
+    <form action="landing.html" id="validateform" method="post" name="validateform">
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-6" class="json" name="request">
                 <fieldset>
                     <legend>Request</legend>
                     <!--<label for="request">Request</label>-->
                     <!--<input id="request" type="text"/>-->
-                    <textarea cols="80" id="request" name="request" rows="25"></textarea>
+                    <textarea style="width: 100%" xcols="80" rows="19" id="request" name="request"></textarea>
                 </fieldset>
             </div>
             <div class="col-sm-6">
                 <fieldset>
                     <legend>Header</legend>
-                    <textarea cols="80" id="header" name="header" rows="5"></textarea>
+                    <textarea style="width: 100%" id="header" name="header" rows="4"></textarea>
                 </fieldset>
                 <fieldset>
                     <legend>Body</legend>
-                    <textarea cols="80" id="body" name="body" rows="15"></textarea>
+                    <textarea style="width: 100%" id="body" name="body" rows="12"></textarea>
                 </fieldset>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <fieldset>
+                    <legend>Public key</legend>
+                    <textarea style="width: 100%" id="publicKey" name="publicKey" rows="4">MIIBHjANBgkqhkiG9w0BAQEFAAOCAQsAMIIBBgKB/gC+0zqjfI2zKvvjwUwE4JiLYyUqazpxWD+hmyLCEXgzfbHIWvwRD54M8PJqCt+9Iq3PBIvpZoJezQ5rztEWN6OI7qoXq4ygZ4YTXGU+ErfqLlvyMv/PfbuHU7oRS+4W0iq2mPwQQXSKMDJz4qSORa75p6xMMHd38xJgHQ6tBwPFMbwhpGsGpCFpxRqlMR735D8gRbhFbSexxMhbyqpQTro0u6xPFoAecldiCJ8KNlp2/NNcRgMZKVIU3rwhp52JcnI90by8UZoD0ItlRoXdaBmmQORWRrm2SC1rRu+KFidzjxe2cRiFVXqthqe1Ttm29atUeVftJhEgb7UpxKJPAgMBAAE=</textarea>
+                </fieldset>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <fieldset>
+                    <legend>Validation</legend>
+                    <p>
+                    <mark class="tag validation tertiary correct" style="display: none">Validation correct</mark>
+                    <mark class="tag validation secondary error" style="display: none">Validation failed</mark>
+                    <mark class="tag validation unknown">Validation unknown</mark>
+                    </p>
+                </fieldset>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <input type="submit" name="submit" value="Validate"/>
             </div>
         </div>
     </form>
