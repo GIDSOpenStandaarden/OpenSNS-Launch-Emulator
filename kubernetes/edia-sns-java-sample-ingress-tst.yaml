@@ -2,7 +2,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: edia-sns-java-sample
+  name: edia-sns-java-sample-consumer
   annotations:
     kubernetes.io/ingress.class: traefik
 spec:
@@ -18,7 +18,7 @@ spec:
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: edia-sns-java-sample
+  name: edia-sns-java-sample-producer
   annotations:
     kubernetes.io/ingress.class: traefik
 spec:
