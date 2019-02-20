@@ -11,8 +11,8 @@ import java.util.Base64;
  */
 @Controller
 public class LandingController {
-	@RequestMapping(value = "producer/landing")
+	@RequestMapping(value = "landing")
 	public String landing(String request) throws Exception {
-		return "redirect:landing.html?request=" + URLEncoder.encode(request, "utf8");
+		return "redirect:validate.html?request=" + URLEncoder.encode(request, "utf8");
 	}
 }

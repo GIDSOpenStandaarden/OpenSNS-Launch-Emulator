@@ -1,17 +1,18 @@
 import java.security.*;
 import static org.apache.commons.codec.binary.Base64.encodeBase64String;
 
-public class RsaKeyPairGenerator {
+public class EcKeyPairGenerator {
 
 	public static void main(String[] args) throws Exception {
-		new RsaKeyPairGenerator().generate();
+		new EcKeyPairGenerator().generate();
 	}
 
 	public void generate() throws NoSuchAlgorithmException {
 		// Create a new generator
-		KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
-		// Set the key size
-		generator.initialize(2024);
+		KeyPairGenerator generator = KeyPairGenerator.getInstance("EC");
+		SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
+		// Set the key size and random
+		generator.initialize(256, random);
 		// Generate a pair
 		KeyPair keyPair = generator.generateKeyPair();
 		// Output the public key as base64

@@ -5,22 +5,31 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 /**
  *
  */
-public class JwtValueObject {
+public class JwtValidationValueObject {
 	String token;
 	String header;
 	String payload;
 	String signature;
 	String error;
 	String publicKey;
+	String endcoding;
 
-	public JwtValueObject() {
+	public JwtValidationValueObject() {
 	}
 
-	public JwtValueObject(DecodedJWT jwt) {
+	public JwtValidationValueObject(DecodedJWT jwt) {
 		this.token = jwt.getToken();
 		this.header = jwt.getHeader();
 		this.payload = jwt.getPayload();
 		this.signature = jwt.getSignature();
+	}
+
+	public String getEndcoding() {
+		return endcoding;
+	}
+
+	public void setEndcoding(String endcoding) {
+		this.endcoding = endcoding;
 	}
 
 	public String getError() {

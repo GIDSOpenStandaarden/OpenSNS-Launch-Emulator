@@ -12,7 +12,7 @@
         return JSON.stringify(JSON.parse(json), null, 2);
       };
       $(document).ready(function () {
-        $('#validateform').submit(function () {
+        var validateToken = function () {
           var token = $('#validateform textarea*[name="request"]').val();
           var publicKey = $('#validateform textarea[name="publicKey"]').val();
           var data = {token: token, publicKey: publicKey}
@@ -23,24 +23,26 @@
             success: function (data) {
               var error = data.error;
               if (error) {
+                $('#reason').text(error);
                 $('.validation').hide();
                 $('.validation.error').show();
               } else {
+                $('#reason').text('');
                 $('.validation').hide();
                 $('.validation.correct').show();
               }
+              $('#validateform textarea[name="header"]').text(pretty(atob(data.header)));
+              $('#validateform textarea[name="body"]').text(pretty(atob(data.payload)));
             }
           });
           return false;
-        });
+        };
+        $('#validateform').submit(validateToken);
 
         var searchParams = new URLSearchParams(window.location.search);
         var request = searchParams.get('request');
         $('#validateform textarea[name="request"]').text(request);
-        var fragments = request.split('.');
-        $('#validateform textarea[name="header"]').text(pretty(atob(fragments[0])));
-        $('#validateform textarea[name="body"]').text(pretty(atob(fragments[1])));
-        $('#validateform textarea[name="signature"]').text(fragments[2]);
+        validateToken();
       })
     </script>
 </head>
@@ -64,7 +66,7 @@
                 </fieldset>
                 <fieldset>
                     <legend>Body</legend>
-                    <textarea style="width: 100%" id="body" name="body" rows="12" readonly></textarea>
+                    <textarea style="width: 100%" id="body" name="body" rows="14" readonly></textarea>
                 </fieldset>
             </div>
         </div>
@@ -72,7 +74,22 @@
             <div class="col-sm-12">
                 <fieldset>
                     <legend>Public key</legend>
-                    <textarea style="width: 100%" id="publicKey" name="publicKey" rows="4">MIIBHjANBgkqhkiG9w0BAQEFAAOCAQsAMIIBBgKB/gC+0zqjfI2zKvvjwUwE4JiLYyUqazpxWD+hmyLCEXgzfbHIWvwRD54M8PJqCt+9Iq3PBIvpZoJezQ5rztEWN6OI7qoXq4ygZ4YTXGU+ErfqLlvyMv/PfbuHU7oRS+4W0iq2mPwQQXSKMDJz4qSORa75p6xMMHd38xJgHQ6tBwPFMbwhpGsGpCFpxRqlMR735D8gRbhFbSexxMhbyqpQTro0u6xPFoAecldiCJ8KNlp2/NNcRgMZKVIU3rwhp52JcnI90by8UZoD0ItlRoXdaBmmQORWRrm2SC1rRu+KFidzjxe2cRiFVXqthqe1Ttm29atUeVftJhEgb7UpxKJPAgMBAAE=</textarea>
+                    <textarea style="width: 100%" id="publicKey" name="publicKey" rows="5"></textarea>
+                </fieldset>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <fieldset>
+                    <legend>Public key</legend>
+                    <select>
+                        <option value="RS256">RS256</option>
+                        <option value="RS384">RS384</option>
+                        <option value="RS512">RS512</option>
+                        <option value="ES256">ES256</option>
+                        <option value="ES384">ES384</option>
+                        <option value="ES512">ES512</option>
+                    </select>
                 </fieldset>
             </div>
         </div>
@@ -82,7 +99,8 @@
                     <legend>Validation</legend>
                     <p>
                     <mark class="tag validation tertiary correct" style="display: none">Validation correct</mark>
-                    <mark class="tag validation secondary error" style="display: none">Validation failed</mark>
+                        <mark class="tag validation secondary error" style="display: none">Validation failed</mark>
+                        <span id="reason"></span>
                     <mark class="tag validation unknown">Validation unknown</mark>
                     </p>
                 </fieldset>
