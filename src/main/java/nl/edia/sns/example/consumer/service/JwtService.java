@@ -54,6 +54,7 @@ public class JwtService {
 				.withSubject(subject)
 				.withIssuer(issuer)
 				.withAudience(audience)
+				.withExpiresAt(new Date(System.currentTimeMillis()+5*60*1000))
 				.withClaim("email", email)
 				.withClaim("resource_id", resourceId)
 				.withClaim("first_name", firstName)
