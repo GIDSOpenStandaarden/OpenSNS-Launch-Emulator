@@ -40,6 +40,7 @@ public class JwtExample {
 				.withClaim("first_name", firstName)
 				.withClaim("middle_name", middleName)
 				.withClaim("last_name", lastName)
+				.withExpiresAt(new Date(System.currentTimeMillis()+5*60*1000))
 				.sign(Algorithm.RSA256(publicKey, privateKey));
 
 		System.out.println(jwt);
