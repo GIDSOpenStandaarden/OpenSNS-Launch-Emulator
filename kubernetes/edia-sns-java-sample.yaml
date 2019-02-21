@@ -36,11 +36,6 @@ spec:
             timeoutSeconds: 5
             periodSeconds: 10
             failureThreshold: 10
-          resources:
-            limits:
-              memory: 500Mi
-            requests:
-              memory: 250Mi
 ---
 apiVersion: v1
 kind: Service
