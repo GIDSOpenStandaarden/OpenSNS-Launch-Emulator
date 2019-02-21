@@ -74,11 +74,13 @@ public class JwtService {
 		if (StringUtils.isEmpty(vo.getPublicKey())) {
 			vo.setPublicKey(publicK);
 		}
-		try {
+		if (StringUtils.isEmpty(vo.getEndcoding())) {
 			// Get the algorithm name from the JWT.
-			String algorithmName = JWT.decode(vo.getToken()).getAlgorithm();
+			vo.setEndcoding(JWT.decode(vo.getToken()).getAlgorithm());
+		}
+		try {
 
-			Algorithm algorithm = getAlgorithm(vo.getPublicKey(), algorithmName);
+			Algorithm algorithm = getAlgorithm(vo.getPublicKey(), vo.getEndcoding());
 
 			DecodedJWT jwt = JWT.require(algorithm).build().verify(vo.getToken());
 
