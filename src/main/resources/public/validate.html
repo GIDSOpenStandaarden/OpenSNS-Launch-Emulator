@@ -32,10 +32,10 @@
                 $('.validation').hide();
                 $('.validation.correct').show();
               }
-              $('#validateform :input[name="header"]').text(pretty(atob(data.header)));
-              $('#validateform :input[name="body"]').text(pretty(atob(data.payload)));
-              $('#validateform :input[name="publicKey"]').text(data.publicKey);
-              $('#validateform :input[name="algorithm"]').text(data.algorithm);
+              $('#validateform :input[name="header"]').val(pretty(atob(data.header)));
+              $('#validateform :input[name="body"]').val(pretty(atob(data.payload)));
+              $('#validateform :input[name="publicKey"]').val(data.publicKey);
+              $('#validateform :input[name="algorithm"]').val(data.algorithm);
             }
           });
           return false;
@@ -86,6 +86,7 @@
                 <fieldset>
                     <legend>Public key</legend>
                     <select name="algorithm">
+                        <option value="">[please select]</option>
                         <option value="RS256">RS256</option>
                         <option value="RS384">RS384</option>
                         <option value="RS512">RS512</option>

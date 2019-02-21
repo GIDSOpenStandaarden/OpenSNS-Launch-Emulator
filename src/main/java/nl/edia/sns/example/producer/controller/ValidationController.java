@@ -20,7 +20,6 @@ public class ValidationController {
 	@RequestMapping(value = "validate")
 	public JwtValidationValueObject validate(JwtValidationValueObject vo) {
 		JwtValidationValueObject valueObject = jwtService.validate(vo);
-		valueObject.setPublicKey(vo.getPublicKey());
 		return valueObject;
 	}
 }

@@ -84,11 +84,15 @@ public class JwtService {
 
 			DecodedJWT jwt = JWT.require(algorithm).build().verify(vo.getToken());
 
-			return new JwtValidationValueObject(jwt);
+			JwtValidationValueObject rv = new JwtValidationValueObject(jwt);
+			rv.setAlgorithm(vo.getAlgorithm());
+			rv.setPublicKey(vo.getPublicKey());
+			return rv;
 		} catch (Exception e) {
 			JwtValidationValueObject valueObject = new JwtValidationValueObject();
 			valueObject.setError(e.getMessage());
 			valueObject.setToken(vo.getToken());
+			valueObject.setAlgorithm(vo.getAlgorithm());
 			return valueObject;
 		}
 	}
