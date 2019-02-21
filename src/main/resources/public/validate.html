@@ -33,6 +33,7 @@
               }
               $('#validateform textarea[name="header"]').text(pretty(atob(data.header)));
               $('#validateform textarea[name="body"]').text(pretty(atob(data.payload)));
+              $('#validateform textarea[name="publicKey"]').text(data.publicKey);
             }
           });
           return false;

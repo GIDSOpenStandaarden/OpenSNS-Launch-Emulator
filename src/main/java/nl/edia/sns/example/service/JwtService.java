@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import nl.edia.sns.example.consumer.controller.JwtLaunchValueObject;
 import nl.edia.sns.example.producer.controller.JwtValidationValueObject;
+import org.apache.commons.lang.StringUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -70,7 +71,7 @@ public class JwtService {
 	}
 
 	public JwtValidationValueObject validate(JwtValidationValueObject vo) {
-		if (vo.getPublicKey() == null) {
+		if (StringUtils.isEmpty(vo.getPublicKey())) {
 			vo.setPublicKey(publicK);
 		}
 		try {
