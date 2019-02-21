@@ -12,7 +12,7 @@ public class JwtValidationValueObject {
 	String signature;
 	String error;
 	String publicKey;
-	String endcoding;
+	String algorithm;
 
 	public JwtValidationValueObject() {
 	}
@@ -24,12 +24,12 @@ public class JwtValidationValueObject {
 		this.signature = jwt.getSignature();
 	}
 
-	public String getEndcoding() {
-		return endcoding;
+	public String getAlgorithm() {
+		return algorithm;
 	}
 
-	public void setEndcoding(String endcoding) {
-		this.endcoding = endcoding;
+	public void setAlgorithm(String algorithm) {
+		this.algorithm = algorithm;
 	}
 
 	public String getError() {
