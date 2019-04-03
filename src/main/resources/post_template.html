@@ -1,13 +1,101 @@
 <!doctype html>
-<html>
+<html lang="nl">
 <head>
-    <script>
-      window.onload = function () { document.forms[0].submit(); }
-    </script>
+    <title>SNS - Bevestiging delen persoonsgegevens</title>
+    <!-- Compiled and minified CSS, Replace with local files in production. -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <!-- Compiled and minified JavaScript, Replace with local files in production. -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
 </head>
 <body>
-<form method="post" action="ACTION">
-    <input type="hidden" name="request" value="JWT_TOKEN" />
+<form id="form" method="post" action="ACTION">
+    <input type="hidden" name="request"
+           value="JWT_TOKEN"/>
 </form>
+<div id="confirm" style="display: none" class="container">
+    <h2>De volgende informatie wordt gedeeld met {aud}</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Veld</th>
+            <th>Waarde</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr id="first_name">
+            <td>Voornaam</td>
+            <td>{first_name}</td>
+        </tr>
+        <tr id="last_name">
+            <td>Achternaam</td>
+            <td>{last_name}</td>
+        </tr>
+        <tr id="email">
+            <td>E-mail</td>
+            <td>{email}</td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="section">
+        <button class="waves-effect waves-teal btn-flat" onclick="cancel()">Annuleren</button>
+        <button class="waves-effect waves-light btn" onclick="proceed()">Akkoord <i
+                class="material-icons right">send</i></button>
+    </div>
+</div>
 </body>
+<script>
+  var userParts = ['first_name', 'last_name', 'email'];
+  var replaceInTextNodes = function (node, seach_and_replace) {
+    var nodeValue = node.nodeValue;
+    if (nodeValue) {
+      for (var key in seach_and_replace) {
+        if (seach_and_replace.hasOwnProperty(key)) {
+          nodeValue = nodeValue.replace('{' + key + '}', seach_and_replace[key]);
+        }
+      }
+      node.nodeValue = nodeValue;
+    }
+    for (var i in node.childNodes) {
+      var child = node.childNodes[i];
+      if (child) {
+        replaceInTextNodes(child, seach_and_replace);
+      }
+    }
+  };
+  var readJwtToken = function (jwt) {
+    var parts = jwt.split('.');
+    return JSON.parse(atob(parts[1]))
+  };
+
+  window.onload = function () {
+    var request_el = document.getElementsByName('request');
+    if (request_el.length > 0) {
+      var value = request_el[0].getAttribute('value');
+      var jwt = readJwtToken(value);
+      var elements = {};
+      for (var i in userParts) {
+        if (jwt[userParts[i]]) {
+          elements[userParts[i]] = jwt[userParts[i]];
+        } else {
+          document.getElementById(userParts[i]).style.display = 'none'
+        }
+      }
+      if (Object.keys(elements)) {
+        elements.aud = jwt.aud;
+        var form = document.getElementById('confirm');
+        replaceInTextNodes(form, elements);
+        form.style.display = ''
+      }
+    }
+  };
+
+  var cancel = function () {
+    window.history.back();
+  };
+
+  var proceed = function () {
+    document.getElementById('form').submit();
+  };
+</script>
 </html>
