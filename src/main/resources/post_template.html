@@ -2,24 +2,24 @@
 <html lang="nl">
 <head>
     <title>SNS - Bevestiging delen persoonsgegevens</title>
-    <!-- Compiled and minified CSS, Replace with local files in production. -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <!-- Compiled and minified JavaScript, Replace with local files in production. -->
+    <!-- Compiled and minified CSS, Replace with self hosted file in production. -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Compiled and minified JavaScript, Replace with self hosted file in production. -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
 </head>
 <body>
-<form id="form" method="post" action="ACTION">
-    <input type="hidden" name="request"
-           value="JWT_TOKEN"/>
+<form action="ACTION" id="form" method="post">
+    <input name="request" type="hidden" value="JWT_TOKEN"/>
 </form>
-<div id="confirm" style="display: none" class="container">
+<div class="container" id="confirm" style="display: none">
     <h2>De volgende informatie wordt gedeeld met {aud}</h2>
-    <table>
+    <table class="striped">
         <thead>
         <tr>
-            <th>Veld</th>
-            <th>Waarde</th>
+            <th style="width: 25%">Veld</th>
+            <th style="width: 75%">Waarde</th>
         </tr>
         </thead>
         <tbody>
@@ -37,38 +37,75 @@
         </tr>
         </tbody>
     </table>
+    <table>
+        <tbody>
+        <tr>
+            <td style="width: 25%">Ik wil deze melding niet meer zien:</td>
+            <td style="width: 75%">
+                <!-- Switch -->
+                <div class="switch" id="futureSuppress">
+                    <label>
+                        Nee <input type="checkbox"> <span class="lever"></span> Ja
+                    </label>
+                </div>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+
     <div class="section">
-        <button class="waves-effect waves-teal btn-flat" onclick="cancel()">Annuleren</button>
-        <button class="waves-effect waves-light btn" onclick="proceed()">Akkoord <i
-                class="material-icons right">send</i></button>
+        <button id="cancel" class="waves-effect waves-teal btn-flat">Annuleren<i class="material-icons right">cancel</i>
+        </button>
+        <button id="proceed" class="waves-effect waves-light btn">Akkoord <i class="material-icons right">send</i>
+        </button>
     </div>
 </div>
 </body>
 <script>
+  /**
+   * The parts of the JWT body that is considered to be personal info.
+   */
   var userParts = ['first_name', 'last_name', 'email'];
-  var replaceInTextNodes = function (node, seach_and_replace) {
-    var nodeValue = node.nodeValue;
+
+  /**
+   * Utility function that replaces {keys} in text nodes of a
+   * element and its children.
+   */
+  var replaceInTextNodes = function (element, seach_and_replace) {
+    var nodeValue = element.nodeValue;
     if (nodeValue) {
       for (var key in seach_and_replace) {
         if (seach_and_replace.hasOwnProperty(key)) {
           nodeValue = nodeValue.replace('{' + key + '}', seach_and_replace[key]);
         }
       }
-      node.nodeValue = nodeValue;
+      element.nodeValue = nodeValue;
     }
-    for (var i in node.childNodes) {
-      var child = node.childNodes[i];
+    for (var i in element.childNodes) {
+      var child = element.childNodes[i];
       if (child) {
         replaceInTextNodes(child, seach_and_replace);
       }
     }
   };
+
+  /**
+   * Reads the jwt and returns the body part as object.
+   */
   var readJwtToken = function (jwt) {
     var parts = jwt.split('.');
     return JSON.parse(atob(parts[1]))
   };
 
-  window.onload = function () {
+  /**
+   * This function parses the JWT and looks for personal info.
+   * If found, it will populate the form with the information and
+   * the form will display.
+   *
+   * @returns {boolean} true if the JWT has personal info.
+   */
+  var parseAndReadJwt = function () {
     var request_el = document.getElementsByName('request');
     if (request_el.length > 0) {
       var value = request_el[0].getAttribute('value');
@@ -88,14 +125,88 @@
         form.style.display = ''
       }
     }
+    // Check if the JWT actually had personal info.
+    return Object.keys(elements).length !== 0
   };
 
+  /**
+   * The cancel button function.
+   */
   var cancel = function () {
     window.history.back();
   };
-
+  /**
+   * The proceed button function.
+   */
   var proceed = function () {
     document.getElementById('form').submit();
   };
+
+  var getSuppressCookie = function () {
+    var name = "suppress_consent";
+    var decodedCookies = decodeURIComponent(document.cookie).split('; ');
+    for (var i in decodedCookies) {
+      var cookieValue = decodedCookies[i].split('=');
+      var cookie = cookieValue[0];
+      var value = cookieValue[1];
+      if (cookie === name) {
+        return value === 'true';
+      }
+    }
+    return false;
+  };
+
+  /**
+   * Add a suppress_consent cookie, valid for one year.
+   */
+  var addSuppressCookie = function () {
+    var expiry = new Date();
+    // Set expiry to a year
+    expiry.setTime(expiry.getTime() + (356 * 24 * 60 * 60 * 1000));
+    document.cookie = 'suppress_consent=true;expires=' + expiry.toUTCString();
+  };
+
+  /**
+   * Remove the suppress_consent cookie.
+   */
+  var removeSuppressCookie = function () {
+    var expiry = new Date();
+    expiry.setTime(0);
+    document.cookie = 'suppress_consent=false;expires=' + expiry.toUTCString();
+  };
+
+  /**
+   * Initializes the event listeners for this page.
+   */
+  var initListeners = function () {
+    document.getElementById('futureSuppress').addEventListener('change', function (event) {
+      if (event.target) {
+        if (event.target.checked) {
+          addSuppressCookie();
+        } else {
+          removeSuppressCookie();
+        }
+      }
+    });
+    document.getElementById('cancel').addEventListener('click', function () {
+      cancel();
+    });
+    document.getElementById('proceed').addEventListener('click', function () {
+      proceed();
+    });
+  };
+  /**
+   * The onload handler.
+   */
+  window.onload = function () {
+    // Condition 1, someone has check the suppress cookie
+    // Condition 2, the JWT has no personal info and return false.
+    if (getSuppressCookie() || !parseAndReadJwt()) {
+      document.forms[0].submit();
+    } else {
+      initListeners();
+    }
+  };
+
 </script>
 </html>
