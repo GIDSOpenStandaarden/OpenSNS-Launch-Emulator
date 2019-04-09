@@ -63,6 +63,7 @@
 </div>
 </body>
 <script>
+  var aud;
   /**
    * The parts of the JWT body that is considered to be personal info.
    */
@@ -118,6 +119,12 @@
           document.getElementById(userParts[i]).style.display = 'none'
         }
       }
+      // Set the top variable aud to the JWT audience.
+      aud = jwt.aud;
+      if (getSuppressCookie()) {
+        return false;
+      }
+
       if (Object.keys(elements)) {
         elements.aud = jwt.aud;
         var form = document.getElementById('confirm');
@@ -125,6 +132,7 @@
         form.style.display = ''
       }
     }
+
     // Check if the JWT actually had personal info.
     return Object.keys(elements).length !== 0
   };
@@ -142,37 +150,56 @@
     document.getElementById('form').submit();
   };
 
+  /**
+   * Gets a suppress consent cookie
+   */
   var getSuppressCookie = function () {
-    var name = "suppress_consent";
-    var decodedCookies = decodeURIComponent(document.cookie).split('; ');
-    for (var i in decodedCookies) {
-      var cookieValue = decodedCookies[i].split('=');
-      var cookie = cookieValue[0];
-      var value = cookieValue[1];
-      if (cookie === name) {
-        return value === 'true';
+      // Check if the top level aud value is set.
+      if (aud) {
+        // Generate the cookie name based on the base64 string of the domain.
+        var name = "sc_" + btoa(aud);
+        // Read the cookie
+        var decodedCookies = decodeURIComponent(document.cookie).split('; ');
+        for (var i in decodedCookies) {
+          var cookieValue = decodedCookies[i].split('=');
+          var cookie = cookieValue[0];
+          var value = cookieValue[1];
+          if (cookie === name) {
+            return value === 'true';
+          }
+        }
       }
+      return false;
     }
-    return false;
-  };
+  ;
 
   /**
-   * Add a suppress_consent cookie, valid for one year.
+   * Add a suppress consent cookie, valid for one year and specific to the domain.
    */
   var addSuppressCookie = function () {
-    var expiry = new Date();
-    // Set expiry to a year
-    expiry.setTime(expiry.getTime() + (356 * 24 * 60 * 60 * 1000));
-    document.cookie = 'suppress_consent=true;expires=' + expiry.toUTCString();
+    // Check if the top level aud value is set.
+    if (aud) {
+      // Generate the cookie name based on the base64 string of the domain.
+      var name = "sc_" + btoa(aud);
+      var expiry = new Date();
+      // Set expiry to a year
+      expiry.setTime(expiry.getTime() + (356 * 24 * 60 * 60 * 1000));
+      document.cookie = name + '=true;expires=' + expiry.toUTCString();
+    }
   };
 
   /**
-   * Remove the suppress_consent cookie.
+   * Remove the suppress consent cookie.
    */
   var removeSuppressCookie = function () {
-    var expiry = new Date();
-    expiry.setTime(0);
-    document.cookie = 'suppress_consent=false;expires=' + expiry.toUTCString();
+    // Check if the top level aud value is set.
+    if (aud) {
+      // Generate the cookie name based on the base64 string of the domain.
+      var name = "sc_" + btoa(aud);
+      var expiry = new Date();
+      expiry.setTime(0);
+      document.cookie = name + '=false;expires=' + expiry.toUTCString();
+    }
   };
 
   /**
@@ -199,14 +226,15 @@
    * The onload handler.
    */
   window.onload = function () {
-    // Condition 1, someone has check the suppress cookie
-    // Condition 2, the JWT has no personal info and return false.
-    if (getSuppressCookie() || !parseAndReadJwt()) {
-      document.forms[0].submit();
-    } else {
+    // Check if there is a need to render the form. There are two conditions
+    // on which the form should not be rendered:
+    // 1) There is no personal data in the cookie.
+    // 2) The user has opted in for consent.
+    if (parseAndReadJwt()) {
       initListeners();
+    } else {
+      document.forms[0].submit();
     }
   };
-
 </script>
 </html>
