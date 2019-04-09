@@ -152,7 +152,7 @@
 
   var getCookieName = function () {
     var base64 = btoa(aud || "unk");
-    base64 = base64.replace('=', '')
+    base64 = base64.replace(/=+/g, '');
     return "sc_" + base64;
   };
   /**
