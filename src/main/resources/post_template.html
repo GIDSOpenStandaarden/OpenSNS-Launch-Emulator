@@ -150,23 +150,25 @@
     document.getElementById('form').submit();
   };
 
+  var getCookieName = function () {
+    var base64 = btoa(aud || "unk");
+    base64 = base64.replace('=', '')
+    return "sc_" + base64;
+  };
   /**
    * Gets a suppress consent cookie
    */
   var getSuppressCookie = function () {
-      // Check if the top level aud value is set.
-      if (aud) {
-        // Generate the cookie name based on the base64 string of the domain.
-        var name = "sc_" + btoa(aud);
-        // Read the cookie
-        var decodedCookies = decodeURIComponent(document.cookie).split('; ');
-        for (var i in decodedCookies) {
-          var cookieValue = decodedCookies[i].split('=');
-          var cookie = cookieValue[0];
-          var value = cookieValue[1];
-          if (cookie === name) {
-            return value === 'true';
-          }
+      // Generate the cookie name based on the base64 string of the domain.
+      var name = getCookieName();
+      // Read the cookie
+      var decodedCookies = decodeURIComponent(document.cookie).split('; ');
+      for (var i in decodedCookies) {
+        var cookieValue = decodedCookies[i].split('=');
+        var cookie = cookieValue[0];
+        var value = cookieValue[1];
+        if (cookie === name) {
+          return value === 'true';
         }
       }
       return false;
@@ -177,29 +179,23 @@
    * Add a suppress consent cookie, valid for one year and specific to the domain.
    */
   var addSuppressCookie = function () {
-    // Check if the top level aud value is set.
-    if (aud) {
-      // Generate the cookie name based on the base64 string of the domain.
-      var name = "sc_" + btoa(aud);
-      var expiry = new Date();
-      // Set expiry to a year
-      expiry.setTime(expiry.getTime() + (356 * 24 * 60 * 60 * 1000));
-      document.cookie = name + '=true;expires=' + expiry.toUTCString();
-    }
+    // Generate the cookie name based on the base64 string of the domain.
+    var name = getCookieName();
+    var expiry = new Date();
+    // Set expiry to a year
+    expiry.setTime(expiry.getTime() + (356 * 24 * 60 * 60 * 1000));
+    document.cookie = name + '=true;expires=' + expiry.toUTCString();
   };
 
   /**
    * Remove the suppress consent cookie.
    */
   var removeSuppressCookie = function () {
-    // Check if the top level aud value is set.
-    if (aud) {
-      // Generate the cookie name based on the base64 string of the domain.
-      var name = "sc_" + btoa(aud);
-      var expiry = new Date();
-      expiry.setTime(0);
-      document.cookie = name + '=false;expires=' + expiry.toUTCString();
-    }
+    // Generate the cookie name based on the base64 string of the domain.
+    var name = getCookieName();
+    var expiry = new Date();
+    expiry.setTime(0);
+    document.cookie = name + '=false;expires=' + expiry.toUTCString();
   };
 
   /**
