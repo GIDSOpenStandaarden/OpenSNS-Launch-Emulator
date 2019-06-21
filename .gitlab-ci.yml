@@ -1,6 +1,6 @@
 variables:
   REGISTRY_NAME: docker-registry.edia.nl
-  TAG_NAME: edia-sns-java-sample
+  TAG_NAME: opensns-betermetelkaar-ssolaunch-samenbeter-validator
   IMAGE_TAG: $REGISTRY_NAME/$TAG_NAME:$CI_PIPELINE_ID
   IMAGE_TAG_LATEST: $REGISTRY_NAME/$TAG_NAME:latest
   NAMESPACE_BASE: edia-smb-sso-poc
@@ -19,7 +19,7 @@ build:
   artifacts:
     when: always
     paths:
-      - target/edia-sns-java-sample.jar
+      - target/opensns-betermetelkaar-ssolaunch-samenbeter-validator.jar
   tags:
     - docker
   only:
