@@ -6,6 +6,6 @@ ENV JAVA_OPTS="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=
 EXPOSE 8080
 EXPOSE 8000
 
-ADD target/opensns-betermetelkaar-ssolaunch-samenbeter-validator.jar /application.jar
+ADD target/opensns-betermetelkaar-ssolaunch-samenbeter-emulator.jar /application.jar
 
 ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -jar /application.jar" ]

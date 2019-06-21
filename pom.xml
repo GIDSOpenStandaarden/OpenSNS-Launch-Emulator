@@ -21,7 +21,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>nl.edia</groupId>
-  <artifactId>opensns-betermetelkaar-ssolaunch-samenbeter-validator</artifactId>
+  <artifactId>opensns-betermetelkaar-ssolaunch-samenbeter-emulator</artifactId>
   <version>1.0-SNAPSHOT</version>
   <properties>
     <java.version>1.8</java.version>
