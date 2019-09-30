@@ -20,7 +20,7 @@ spec:
       - name: edia-registry-credential
       containers:
         - name: edia-sns-java-sample
-          image: 'docker-registry.edia.nl/edia-sns-java-sample:<TAG>'
+          image: 'docker-registry.edia.nl/opensns-betermetelkaar-ssolaunch-samenbeter-emulator:<TAG>'
           readinessProbe:
             httpGet:
               path: /health
