@@ -30,6 +30,7 @@ public class JwtLaunchValueObject {
 	String lastName;
 	boolean debug = Boolean.FALSE;
 	String launchUrl;
+	String privacyUrl;
 
 	public String getAudience() {
 		return audience;
@@ -93,6 +94,14 @@ public class JwtLaunchValueObject {
 
 	public void setMiddleName(String middleName) {
 		this.middleName = middleName;
+	}
+
+	public String getPrivacyUrl() {
+		return privacyUrl;
+	}
+
+	public void setPrivacyUrl(String privacyUrl) {
+		this.privacyUrl = privacyUrl;
 	}
 
 	public String getResource_id() {
