@@ -29,7 +29,7 @@
 <form action="ACTION" id="form" method="post">
     <input name="request" type="hidden" value="JWT_TOKEN"/>
 </form>
-<div class="container" id="confirm" style="display: none">
+<div class="container" id="confirm" style="display: xnone">
     <h2>De volgende informatie wordt gedeeld met {aud}</h2>
     <table class="striped">
         <thead>
@@ -66,9 +66,12 @@
                 </div>
             </td>
         </tr>
-
         </tbody>
     </table>
+
+    <div class="section">
+        <p><a target="_blank" href="myprivacy.pdf">Lees hier meer over het privacybeleid van {aud}</a></p>
+    </div>
 
     <div class="section">
         <button id="cancel" class="waves-effect waves-teal btn-flat">Annuleren<i class="material-icons right">cancel</i>
